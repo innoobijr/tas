@@ -101,6 +101,8 @@ struct kernel_appout_conn_move {
 } __attribute__((packed));
 
 #define KERNEL_APPOUT_LISTEN_REUSEPORT 0x1
+#define KERNEL_APPOUT_RPC_CONNECTION   0x10
+
 /** Open listener */
 struct kernel_appout_listen_open {
   uint64_t opaque;

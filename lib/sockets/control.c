@@ -265,13 +265,14 @@ out:
   return ret;
 }
 
-int tas_connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
+int tas_connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen, uint32_t flags)
 {
   struct socket *s;
   int ret = 0, block;
   struct sockaddr_in *sin = (struct sockaddr_in *) addr;
   struct flextcp_context *ctx;
 
+  // Use flags to create signify this is an RPC connection
   if (flextcp_fd_slookup(sockfd, &s) != 0) {
     errno = EBADF;
     return -1;
@@ -350,7 +351,7 @@ out:
   return ret;
 }
 
-int tas_listen(int sockfd, int backlog)
+int tas_listen(int sockfd, int backlog, uint32_t flags)
 {
   struct socket *s;
   struct flextcp_context *ctx;
@@ -428,7 +429,7 @@ out:
 }
 
 int tas_accept4(int sockfd, struct sockaddr *addr, socklen_t *addrlen,
-    int flags)
+    uint32_t flags)
 {
   struct socket *s, *ns;
   struct flextcp_context *ctx;
@@ -493,7 +494,7 @@ int tas_accept4(int sockfd, struct sockaddr *addr, socklen_t *addrlen,
     ns->data.connection.rx_len_1 = 0;
     ns->data.connection.rx_len_2 = 0;
     ns->data.connection.ctx = ctx;
-
+    ns->data.connection.flags = flags;
     sp->fd = newfd;
     sp->s = ns;
     sp->ctx = ctx;
@@ -583,9 +584,9 @@ out:
 }
 
 /** map: accept  -->  accept4 */
-int tas_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
+int tas_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen, uint32_t flags)
 {
-  return tas_accept4(sockfd, addr, addrlen, 0);
+  return tas_accept4(sockfd, addr, addrlen, flags);
 }
 
 int tas_fcntl(int sockfd, int cmd, ...)

@@ -224,6 +224,7 @@ struct flextcp_event {
 };
 
 #define FLEXTCP_LISTEN_REUSEPORT 0x1
+#define FLEXTCP_RPC_CONNNECTION  0x10
 
 /**
  * Initializes global flextcp state, must only be called once.

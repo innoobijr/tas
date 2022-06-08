@@ -209,7 +209,7 @@ int tcp_open(struct app_context *ctx, uint64_t opaque, uint32_t remote_ip,
 }
 
 int tcp_listen(struct app_context *ctx, uint64_t opaque, uint16_t local_port,
-    uint32_t backlog, int reuseport, struct listener **listen)
+    uint32_t backlog, int reuseport, struct listener **listen, uint32_t flags)
 {
   struct listener *lst;
   uint32_t i;
@@ -300,7 +300,7 @@ int tcp_listen(struct app_context *ctx, uint64_t opaque, uint16_t local_port,
   lst->backlog_len = backlog;
   lst->backlog_pos = 0;
   lst->backlog_used = 0;
-  lst->flags = 0;
+  lst->flags = flags;
 
   /* add to port tables */
   if (reuseport == 0) {

@@ -141,11 +141,11 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
   return ret;
 }
 
-int listen(int sockfd, int backlog)
+int listen(int sockfd, int backlog, uint32_t flags)
 {
   int ret;
   ensure_init();
-  if ((ret = tas_listen(sockfd, backlog)) == -1 && errno == EBADF) {
+  if ((ret = tas_listen(sockfd, backlog, flags)) == -1 && errno == EBADF) {
     return libc_listen(sockfd, backlog);
   }
   return ret;
@@ -554,7 +554,7 @@ long syscall(long number, ...)
   long ret;
   va_list val;
   long arg1, arg2, arg3, arg4, arg5, arg6;
-
+  uint32_t arg7;
   ensure_init();
 
   /* pray to god that this is safe on X86-64... */
@@ -565,6 +565,7 @@ long syscall(long number, ...)
   arg4 = va_arg(val, long);
   arg5 = va_arg(val, long);
   arg6 = va_arg(val, long);
+  arg7 = va_arg(val, uint32_t);
   va_end(val);
 
   switch (number) {
@@ -581,7 +582,7 @@ long syscall(long number, ...)
       return connect((int) arg1, (const struct sockaddr *) (uintptr_t) arg2,
           (socklen_t) arg3);
     case SYS_listen:
-      return listen((int) arg1, (int) arg2);
+      return listen((int) arg1, (int) arg2, (uint32_t) arg7);
     case SYS_accept4:
       return accept4((int) arg1, (struct sockaddr *) (uintptr_t) arg2,
           (socklen_t *) (uintptr_t) arg3, (int) arg4);

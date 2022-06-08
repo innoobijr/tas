@@ -182,7 +182,7 @@ int nicif_connection_add(uint32_t db, uint64_t mac_remote, uint32_t ip_local,
   struct flextcp_pl_flowst *fs;
   beui32_t lip = t_beui32(ip_local), rip = t_beui32(ip_remote);
   beui16_t lp = t_beui16(port_local), rp = t_beui16(port_remote);
-  uint32_t i, d, f_id, hash;
+  uint32_t i, d, f_id, hash, flags;
   struct flextcp_pl_flowhte *hte = fp_state->flowht;
 
   /* allocate flow id */
@@ -203,6 +203,10 @@ int nicif_connection_add(uint32_t db, uint64_t mac_remote, uint32_t ip_local,
 
   if ((flags & NICIF_CONN_ECN) == NICIF_CONN_ECN) {
     rx_base |= FLEXNIC_PL_FLOWST_ECN;
+  }
+
+  if ((flags & FLEXTCP_RPC_CONNNECTION) == FLEXTCP_RPC_CONNNECTION) {
+    fs->flags |= FLEXNIC_RPC_CONNECTION;
   }
 
   fs = &fp_state->flowst[f_id];

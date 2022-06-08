@@ -48,14 +48,14 @@ int tas_shutdown(int sockfd, int how);
 
 int tas_bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 
-int tas_connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+int tas_connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen, uint32_t flags);
 
-int tas_listen(int sockfd, int backlog);
+int tas_listen(int sockfd, int backlog, uint32_t flags);
 
 int tas_accept4(int sockfd, struct sockaddr *addr, socklen_t *addrlen,
-    int flags);
+    uint32_t flags);
 
-int tas_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+int tas_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen, uint32_t);
 
 
 int tas_fcntl(int sockfd, int cmd, ...);
