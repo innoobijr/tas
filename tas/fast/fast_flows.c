@@ -510,6 +510,9 @@ int fast_flows_packet(struct dataplane_context *ctx,
   }
 
   /* if there is payload, dma it to the receive buffer */
+  /* this is the equivalent location where `cornflakes` is invoked. It checkes the flowstate to know whether this is an RPC connection. If so the `cornflakes` code is called. Otherwise it call the flow_rx_write code per usual
+   *
+   */
   if (payload_bytes > 0) {
     flow_rx_write(fs, fs->rx_next_pos, payload_bytes, payload);
 
@@ -928,6 +931,11 @@ static void flow_tx_segment(struct dataplane_context *ctx,
   opt_ts->ts_ecr = t_beui32(ts_echo);
 
   /* add payload if requested */
+  /*
+   * The `cornflakes` code will plugin here replaceing the flow_tx_read code
+   *  As per the paper, we check the flowstate to see if this is a RPC conneciton. if it is. the cornflakes branch will be invoked, otherwise we call `flow_tx_read` as usual.
+   *
+   */
   if (payload > 0) {
     flow_tx_read(fs, payload_pos, payload, (uint8_t *) p + hdrs_len);
   }
